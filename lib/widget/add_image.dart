@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddImage extends StatefulWidget {
-  const AddImage({super.key});
+  const AddImage({super.key, required this.onPickImage});
+  final void Function(File image) onPickImage;
 
   @override
   State<AddImage> createState() => _AddImageState();
@@ -20,6 +21,7 @@ class _AddImageState extends State<AddImage> {
     setState(() {
       imagefile = File(image.path);
     });
+    widget.onPickImage(imagefile!);
   }
 
   Future<void> loadimage() async {
@@ -29,6 +31,7 @@ class _AddImageState extends State<AddImage> {
     setState(() {
       imagefile = File(image.path);
     });
+    widget.onPickImage(imagefile!);
   }
 
   Future<void> showdialog() async {
@@ -67,11 +70,16 @@ class _AddImageState extends State<AddImage> {
   Widget build(BuildContext context) {
     Widget content = ClipRRect(
       borderRadius: BorderRadiusGeometry.circular(8),
-      child: const Padding(
-        padding: EdgeInsets.all(12),
-        child: Align(
-          alignment: AlignmentGeometry.bottomRight,
-          child: Text('add your image'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Stack(
+          children: [
+            Image.asset('assets/image/data.png'),
+            const Align(
+              alignment: AlignmentGeometry.bottomRight,
+              child: Text('add your image'),
+            ),
+          ],
         ),
       ),
     );
@@ -89,10 +97,6 @@ class _AddImageState extends State<AddImage> {
           width: double.infinity,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            image: const DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('assets/image/data.png'),
-            ),
             border: Border.all(
               width: 3,
 

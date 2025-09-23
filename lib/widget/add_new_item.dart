@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:fav_place/provider/add_newitem.dart';
@@ -6,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddNewItem extends ConsumerStatefulWidget {
-  const AddNewItem({super.key});
+  const AddNewItem({required this.passingimage, super.key});
+  final void Function(File?) passingimage;
 
   @override
   ConsumerState<AddNewItem> createState() => _AddNewItemState();
@@ -14,15 +16,25 @@ class AddNewItem extends ConsumerStatefulWidget {
 
 class _AddNewItemState extends ConsumerState<AddNewItem> {
   File? image;
+
   // LocationPlace? _locationPlace;
+
+  TextEditingController titleController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController titleController = TextEditingController();
     final text = titleController.text;
+
     void onsave() {
+      log('image = ${image.toString()}');
       if (image == null || text.isEmpty) return;
       ref.read(addNewItemProvider.notifier).addnewitem(text, image!);
+      widget.passingimage(image);
       Navigator.of(context).pop();
     }
 
@@ -39,10 +51,17 @@ class _AddNewItemState extends ConsumerState<AddNewItem> {
                   labelText: 'title :',
                   border: OutlineInputBorder(),
                 ),
+                maxLines: null,
                 controller: titleController,
               ),
               const SizedBox(height: 10),
-              const AddImage(),
+              AddImage(
+                onPickImage: (File pickedimage) {
+                  setState(() {
+                    image = pickedimage;
+                  });
+                },
+              ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
