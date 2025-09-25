@@ -1,7 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:fav_place/model/model.dart';
 import 'package:fav_place/provider/add_newitem.dart';
+import 'package:fav_place/screen/location.dart';
 import 'package:fav_place/widget/add_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +18,7 @@ class AddNewItem extends ConsumerStatefulWidget {
 class _AddNewItemState extends ConsumerState<AddNewItem> {
   File? image;
 
-  // LocationPlace? _locationPlace;
+  LocationPlace? _locationPlace;
 
   TextEditingController titleController = TextEditingController();
   @override
@@ -31,9 +32,10 @@ class _AddNewItemState extends ConsumerState<AddNewItem> {
     final text = titleController.text;
 
     void onsave() {
-      log('image = ${image.toString()}');
-      if (image == null || text.isEmpty) return;
-      ref.read(addNewItemProvider.notifier).addnewitem(text, image!);
+      if (image == null || text.isEmpty || _locationPlace == null) return;
+      ref
+          .read(addNewItemProvider.notifier)
+          .addnewitem(text, image!, _locationPlace!);
       widget.passingimage(image);
       Navigator.of(context).pop();
     }
@@ -63,6 +65,50 @@ class _AddNewItemState extends ConsumerState<AddNewItem> {
                 },
               ),
               const SizedBox(height: 10),
+              const SizedBox(height: 10),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => FlutterMapScreen(
+                          passlocation: (LocationPlace p1) {
+                            setState(() {
+                              _locationPlace = p1;
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 250,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 3,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'assets/image/data_one.png',
+                          fit: BoxFit.contain,
+                        ),
+                        const Align(
+                          alignment: AlignmentGeometry.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20, right: 12),
+                            child: Text('Add your location'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -70,13 +116,51 @@ class _AddNewItemState extends ConsumerState<AddNewItem> {
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
-                    icon: const Icon(Icons.cancel),
-                    label: const Text('Cancel'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 50,
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.cancel,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+                    label: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
                   ),
                   ElevatedButton.icon(
                     onPressed: onsave,
-                    icon: const Icon(Icons.save),
-                    label: const Text('Save'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 50,
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.save,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+                    label: Text(
+                      'Save',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
                   ),
                 ],
               ),
