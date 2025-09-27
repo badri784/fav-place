@@ -44,6 +44,12 @@ dependencies:
   latlong2: ^0.9.1
   flutter_map: ^8.2.2
   url_launcher: ^6.3.2
+  flutter_launcher_icons: ^0.14.4
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/image/icon.png"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

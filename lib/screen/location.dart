@@ -1,5 +1,7 @@
+// import 'dart:developer';
 import 'package:fav_place/model/model.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
@@ -44,6 +46,7 @@ class _FlutterMapScreenState extends State<FlutterMapScreen> {
       latitude: locationData.latitude!,
       lngtiude: locationData.longitude!,
     );
+    // log(locationplace.latitude.toString());
 
     widget.passlocation(locationplace);
     return LocationPlace(
@@ -58,7 +61,7 @@ class _FlutterMapScreenState extends State<FlutterMapScreen> {
       appBar: AppBar(
         title: const Text('Live Location'),
         centerTitle: true,
-        actions: [
+        actions: <Widget>[
           IconButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -83,7 +86,7 @@ class _FlutterMapScreenState extends State<FlutterMapScreen> {
           }
 
           final location = snapshot.data!;
-          final latLng = LatLng(location.latitude, location.lngtiude);
+          var latLng = LatLng(location.latitude, location.lngtiude);
 
           return FlutterMap(
             mapController: mapController,
@@ -92,7 +95,7 @@ class _FlutterMapScreenState extends State<FlutterMapScreen> {
               initialCenter: latLng,
               onTap: (tapPosition, point) {
                 setState(() {
-                  // غير مكان الماركر حسب الضغط
+                  latLng = point;
                 });
               },
             ),

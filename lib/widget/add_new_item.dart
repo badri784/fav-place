@@ -43,18 +43,21 @@ class _AddNewItemState extends ConsumerState<AddNewItem> {
     return Scaffold(
       appBar: AppBar(title: const Text('Add New Item'), centerTitle: true),
       body: Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 10),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  labelText: 'title :',
-                  border: OutlineInputBorder(),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: TextField(
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    labelText: 'title :',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: null,
+                  controller: titleController,
                 ),
-                maxLines: null,
-                controller: titleController,
               ),
               const SizedBox(height: 10),
               AddImage(
